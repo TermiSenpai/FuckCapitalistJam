@@ -478,11 +478,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2be90c988a2048e489b3d752fb0b76ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkRate: 0.05
-  maxCheckDistance: 2
-  InteractuableLayer:
-    serializedVersion: 2
-    m_Bits: 512
+  config: {fileID: 11400000, guid: 2d179df8a3e7a05488ad2de797b20bc0, type: 2}
   promptText: {fileID: 1326178782}
 --- !u!1 &705507993
 GameObject:
