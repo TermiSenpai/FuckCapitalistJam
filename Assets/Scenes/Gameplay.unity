@@ -336,7 +336,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48f922efdd1a739408489d8afdf46dc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 6
+  config: {fileID: 11400000, guid: 0e5973f7427c70848a73045f66cf6dac, type: 2}
   controller: {fileID: 633432987}
 --- !u!114 &633432990
 MonoBehaviour:
@@ -351,9 +351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraContainer: {fileID: 222171222}
-  minYLook: -85
-  maxYLook: 85
-  lookSensityivity: 0.1
+  config: {fileID: 11400000, guid: 288feed62b9ac01428ec5637043d9fc9, type: 2}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

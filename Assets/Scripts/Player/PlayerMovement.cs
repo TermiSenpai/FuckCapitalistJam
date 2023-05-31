@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Config")]
-    [SerializeField] private float movementSpeed;
+    [SerializeField] private PlayerMovementConfig config;
 
     [Header("Needs")]
     [SerializeField] private CharacterController controller;
@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     private void movePlayer()
     {
         Vector3 dir = transform.forward * curMovementInput.y + transform.right * curMovementInput.x;
-        dir *= movementSpeed;
+        dir *= config.movementSpeed;
         dir.y = controller.velocity.y;
         controller.Move(dir * Time.deltaTime);
     }
