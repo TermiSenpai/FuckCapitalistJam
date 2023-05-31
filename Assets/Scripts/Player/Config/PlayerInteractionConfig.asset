@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   checkRate: 0.05
   maxCheckDistance: 2
-  InteractuableLayer:
+  InteractuableLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
