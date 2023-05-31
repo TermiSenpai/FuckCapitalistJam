@@ -6,7 +6,7 @@ public class ItemObject : MonoBehaviour, IInteractuable
 {
     [SerializeField] private ItemData item;
 
-    public string GetInteractPromt()
+    public virtual string GetInteractPromt()
     {
         return string.Format($"Interact {item.displayName}");
     }
