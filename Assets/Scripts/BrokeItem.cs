@@ -37,7 +37,7 @@ public class BrokeItem : MonoBehaviour, IBreakable
     private void KnockbackOtherObjects()
     {
         // Crea una esfera en el objeto y al entrar en contacto con otro, genera una fuerza en cadena
-        Collider[] colliders = Physics.OverlapSphere(transform.position, config.knockbackOtherRadius); 
+        Collider[] colliders = Physics.OverlapSphere(transform.position, config.knockbackOtherRadius);
 
         foreach (Collider collider in colliders)
         {
@@ -48,6 +48,9 @@ public class BrokeItem : MonoBehaviour, IBreakable
                 Rigidbody otherRb = collider.gameObject.GetComponent<Rigidbody>();
                 otherRb.isKinematic = false;
                 otherRb.AddForce(knockbackDirection * config.knockbackForce, ForceMode.Impulse);
+
+                if (collider.TryGetComponent<BrokeItem>(out BrokeItem T))
+                { T.StartCoroutine(disableDestroyedItems(collider)); }
             }
         }
     }
@@ -57,5 +60,19 @@ public class BrokeItem : MonoBehaviour, IBreakable
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(transform.position, config.knockbackOtherRadius);
+    }
+
+    // Desaparición de objetos rotos
+    public IEnumerator disableDestroyedItems(Collider item)
+    {
+        // El layer se convierte en uno donde no tiene colisiones con nada
+        yield return new WaitForSeconds(config.timeBeforeDisapear);
+        item.gameObject.layer = 11;
+        //item.enabled = false;
+
+        // Se desactiva para mantener fps estables
+        yield return new WaitForSeconds(config.timeBeforeDisapear);
+        item.gameObject.SetActive(false);
+        transform.parent.gameObject.SetActive(false);
     }
 }

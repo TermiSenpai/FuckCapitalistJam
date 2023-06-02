@@ -11,4 +11,6 @@ public class BreakableConfig : ScriptableObject
     public AudioClip onBreakSound;
     [Tooltip("Radio de una esfera invisible que al hacer contacto con otra parte, aplicará otro knockback en cadena")]
     public float knockbackOtherRadius;
+    [Tooltip("Tiempo antes de empezar a desaparecer")]
+    public float timeBeforeDisapear = 3;
 }

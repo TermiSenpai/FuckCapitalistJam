@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d03d8cb17a6938448a5b5445abc0fc43, type: 3}
   m_Name: TestItem
   m_EditorClassIdentifier: 
-  knockbackForce: 1500
+  knockbackForce: 750
   onBreakSound: {fileID: 0}
-  knockbackOtherRadius: 0.25
+  knockbackOtherRadius: 0.4
+  timeBeforeDisapear: 3
