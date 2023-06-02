@@ -9,15 +9,7 @@ public class AttackAnim : MonoBehaviour
     [SerializeField] private PlayerAnimController playerAnimController;
 
     [Header("Attacking")]
-    public float attackDistance = 3f;
-    public float attackDelay = 0.2f;
-    public float attackSpeed = 1f;
-    public int attackDamage = 1;
-    public LayerMask attackLayer;
-
-    public GameObject hitEffect;
-    public AudioClip swordSwing;
-    public AudioClip hitSound;
+    [SerializeField] PlayerAttackConfig config;
 
     bool attacking = false;
     bool readyToAttack = true;
@@ -37,8 +29,8 @@ public class AttackAnim : MonoBehaviour
         readyToAttack = false;
         attacking = true;
 
-        //audioSource.pitch = Random.Range(0.9f, 1.1f);
-        //audioSource.PlayOneShot(swordSwing);
+        audioSource.pitch = Random.Range(0.9f, 1.1f);
+        audioSource.PlayOneShot(config.swing);
 
         if (attackCount == 0)
         {
@@ -61,28 +53,30 @@ public class AttackAnim : MonoBehaviour
     void AttackRaycast()
     {
 
-        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, attackDistance, attackLayer))
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, config.attackDistance, config.attackLayer))
         {
-            Debug.Log(hit.collider.name);
             //HitTarget(hit.point);
 
-            //if (hit.transform.TryGetComponent<Actor>(out Actor T))
-            //{ T.TakeDamage(attackDamage); }
+            Debug.Log(hit.collider.name);
+            if (hit.transform.TryGetComponent<BrokeItem>(out BrokeItem T))
+            { T.breakItem(transform.forward); }
+
+
         }
     }
 
     void HitTarget(Vector3 pos)
     {
         audioSource.pitch = 1;
-        audioSource.PlayOneShot(hitSound);
+        audioSource.PlayOneShot(config.hitSound);
 
-        GameObject GO = Instantiate(hitEffect, pos, Quaternion.identity);
+        GameObject GO = Instantiate(config.hitEffect, pos, Quaternion.identity);
         Destroy(GO, 20);
     }
 
     public void OnFireInput(InputAction.CallbackContext context)
     {
-        switch(context.phase)
+        switch (context.phase)
         {
             case InputActionPhase.Started:
                 Attack();

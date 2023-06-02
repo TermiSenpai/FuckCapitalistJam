@@ -9,10 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d03d8cb17a6938448a5b5445abc0fc43, type: 3}
-  m_Name: TestItem
+  m_Script: {fileID: 11500000, guid: c06faeb25f1b8b74695ffcf853c4e392, type: 3}
+  m_Name: PlayerAttackConfig
   m_EditorClassIdentifier: 
-  knockbackForce: 750
-  onBreakSound: {fileID: 0}
-  knockbackOtherRadius: 0.4
-  timeBeforeDisapear: 3
+  attackDistance: 3
+  attackDelay: 0.2
+  attackSpeed: 1
+  attackLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  hitEffect: {fileID: 0}
+  swing: {fileID: 0}
+  hitSound: {fileID: 0}

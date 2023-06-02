@@ -4,5 +4,6 @@ using UnityEngine;
 
 public interface IBreakable
 {
-    public void breakItem();
+    public void breakItem(Vector3 dir);
+    public void onBreakItem();
 }
