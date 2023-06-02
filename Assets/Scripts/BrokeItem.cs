@@ -6,10 +6,12 @@ public class BrokeItem : MonoBehaviour, IBreakable
 {
     public BreakableConfig config;
     Rigidbody rb;
+    AudioSource source;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        source = GetComponentInParent<AudioSource>();
     }
 
 
@@ -28,7 +30,7 @@ public class BrokeItem : MonoBehaviour, IBreakable
     public void onBreakItem()
     {
         // aplicar sonido
-
+        source.PlayOneShot(config.onBreakSound);
         // aplicar knockback en cadena
         KnockbackOtherObjects(rb);
     }
