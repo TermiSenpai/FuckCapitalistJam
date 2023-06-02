@@ -15,10 +15,9 @@ MonoBehaviour:
   attackDistance: 3
   attackDelay: 0.2
   attackSpeed: 1
-  attackDamage: 1
   attackLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
   hitEffect: {fileID: 0}
   swing: {fileID: 0}
   hitSound: {fileID: 0}

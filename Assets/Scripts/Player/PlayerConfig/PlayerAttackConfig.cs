@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName ="PlayerAttackConfig", menuName ="Player/Player Attack Config")]
+[CreateAssetMenu(fileName ="PlayerAttackConfig", menuName ="PlayerConfig/Player Attack Config")]
 public class PlayerAttackConfig : ScriptableObject
 {
     [Header("Basic config")]
