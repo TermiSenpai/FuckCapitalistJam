@@ -63,11 +63,13 @@ public class AttackAnim : MonoBehaviour
 
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, attackDistance, attackLayer))
         {
-            Debug.Log(hit.collider.name);
             //HitTarget(hit.point);
 
-            //if (hit.transform.TryGetComponent<Actor>(out Actor T))
-            //{ T.TakeDamage(attackDamage); }
+            Debug.Log(hit.collider.name);
+            if (hit.transform.TryGetComponent<BrokeItem>(out BrokeItem T))
+            { T.breakItem(transform.forward); }
+
+
         }
     }
 
@@ -82,7 +84,7 @@ public class AttackAnim : MonoBehaviour
 
     public void OnFireInput(InputAction.CallbackContext context)
     {
-        switch(context.phase)
+        switch (context.phase)
         {
             case InputActionPhase.Started:
                 Attack();
