@@ -14,7 +14,6 @@ public class BrokeItem : MonoBehaviour, IBreakable
         source = GetComponentInParent<AudioSource>();
     }
 
-
     public void breakItem(Vector3 dir)
     {
         rb.isKinematic = false;
@@ -32,12 +31,13 @@ public class BrokeItem : MonoBehaviour, IBreakable
         // aplicar sonido
         source.PlayOneShot(config.onBreakSound);
         // aplicar knockback en cadena
-        KnockbackOtherObjects(rb);
+        KnockbackOtherObjects();
     }
 
-    private void KnockbackOtherObjects(Rigidbody rb)
+    private void KnockbackOtherObjects()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, config.knockbackOtherRadius); // Ajusta el radio según tus necesidades
+        // Crea una esfera en el objeto y al entrar en contacto con otro, genera una fuerza en cadena
+        Collider[] colliders = Physics.OverlapSphere(transform.position, config.knockbackOtherRadius); 
 
         foreach (Collider collider in colliders)
         {
@@ -52,6 +52,7 @@ public class BrokeItem : MonoBehaviour, IBreakable
         }
     }
 
+    // Hace visible la esfera que genera la fuerza en cadena en el editor
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
