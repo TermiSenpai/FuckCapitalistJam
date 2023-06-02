@@ -6,8 +6,10 @@ public class PlayerAnimController : MonoBehaviour
 {
     [SerializeField] Animator animator;
 
-    public string ATTACK1 = "Attack_1";
-    public string ATTACK2 = "Attack_2";
+    public string ATTACK1 = "Attack1";
+    public string ATTACK2 = "Attack2";
+    public string IDLE = "Idle";
+    public string PREPARED = "Prepared";
 
     string currentAnimationState;
 

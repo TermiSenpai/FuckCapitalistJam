@@ -73,12 +73,12 @@ public class AttackAnim : MonoBehaviour
 
     private void OnEnable()
     {
-        playerAnimController.ChangeAnimationState("Prepared");
+        playerAnimController.ChangeAnimationState(playerAnimController.PREPARED);
     }
 
     private void OnDisable()
     {
-        playerAnimController.ChangeAnimationState("Idle");
+        playerAnimController.ChangeAnimationState(playerAnimController.IDLE);
     }
 
 }
