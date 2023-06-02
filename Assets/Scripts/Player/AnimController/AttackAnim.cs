@@ -52,26 +52,12 @@ public class AttackAnim : MonoBehaviour
 
     void AttackRaycast()
     {
-
+        // Crea un raycast desde el centro de la pantalla en el momento del impacto para generar knockback
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, config.attackDistance, config.attackLayer))
         {
-            //HitTarget(hit.point);
-
-            Debug.Log(hit.collider.name);
             if (hit.transform.TryGetComponent<BrokeItem>(out BrokeItem T))
             { T.breakItem(transform.forward); }
-
-
         }
-    }
-
-    void HitTarget(Vector3 pos)
-    {
-        audioSource.pitch = 1;
-        audioSource.PlayOneShot(config.hitSound);
-
-        GameObject GO = Instantiate(config.hitEffect, pos, Quaternion.identity);
-        Destroy(GO, 20);
     }
 
     public void OnFireInput(InputAction.CallbackContext context)
@@ -79,9 +65,20 @@ public class AttackAnim : MonoBehaviour
         switch (context.phase)
         {
             case InputActionPhase.Started:
-                Attack();
+                if (this.enabled == true)
+                    Attack();
                 break;
         }
+    }
+
+    private void OnEnable()
+    {
+        playerAnimController.ChangeAnimationState("Prepared");
+    }
+
+    private void OnDisable()
+    {
+        playerAnimController.ChangeAnimationState("Idle");
     }
 
 }

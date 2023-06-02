@@ -18,8 +18,6 @@ public class PlayerAttackConfig : ScriptableObject
     public LayerMask attackLayer;
 
     [Header("Effects")]
-    [Tooltip("Efecto del golpe que será visible en el momento del impacto")]
-    public GameObject hitEffect;
     [Tooltip("Sonido realizado durante la animación")]
     public AudioClip swing;
     [Tooltip("Sonido al impactar")]
