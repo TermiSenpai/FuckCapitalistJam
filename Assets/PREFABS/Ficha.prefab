@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 879813774918068834}
-  - component: {fileID: 1245791936263523958}
-  m_Layer: 0
+  - component: {fileID: 5365580022169887839}
+  m_Layer: 12
   m_Name: Ficha
   m_TagString: ficha
   m_Icon: {fileID: 0}
@@ -33,7 +33,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1245791936263523958
+--- !u!65 &5365580022169887839
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,8 +44,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.37466192, y: 0.009171903, z: 0.37416172}
-  m_Center: {x: -0.00021648407, y: -0.002253741, z: -0.0008635521}
+  m_Size: {x: 1, y: 0.009220898, z: 1}
+  m_Center: {x: 0, y: -0.004575342, z: -0}
 --- !u!1 &7329235788780716657
 GameObject:
   m_ObjectHideFlags: 0
@@ -55,7 +55,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1814673418153672748}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: FichaAnimacion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,6 +88,10 @@ PrefabInstance:
     - target: {fileID: 6689734998087742966, guid: 1ce1f0a9e171ca44289b8f33f86d0c6f, type: 3}
       propertyPath: m_Name
       value: FichaModelo
+      objectReference: {fileID: 0}
+    - target: {fileID: 6689734998087742966, guid: 1ce1f0a9e171ca44289b8f33f86d0c6f, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6689734998087742967, guid: 1ce1f0a9e171ca44289b8f33f86d0c6f, type: 3}
       propertyPath: m_RootOrder
@@ -132,6 +136,10 @@ PrefabInstance:
     - target: {fileID: 6689734998087742967, guid: 1ce1f0a9e171ca44289b8f33f86d0c6f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7903575616324408543, guid: 1ce1f0a9e171ca44289b8f33f86d0c6f, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ce1f0a9e171ca44289b8f33f86d0c6f, type: 3}
