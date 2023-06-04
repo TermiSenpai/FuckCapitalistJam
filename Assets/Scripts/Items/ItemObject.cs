@@ -5,13 +5,16 @@ using UnityEngine;
 public class ItemObject : MonoBehaviour, IInteractuable
 {
     [SerializeField] private ItemData item;
+    public bool isInteractuable = true;
 
     public virtual string GetInteractPromt()
     {
-        return string.Format($"Interact {item.displayName}");
+        if (isInteractuable)
+            return string.Format($"Press <b>[F]</b> to interact with {item.displayName}");
+        return string.Empty;
     }
 
-    public void OnInteract()
+    public virtual void OnInteract()
     {
         //Temporal
         Destroy(gameObject);
