@@ -5,12 +5,12 @@ using UnityEngine;
 public class ItemObject : MonoBehaviour, IInteractuable
 {
     [SerializeField] private ItemData item;
-    [SerializeField] protected bool isInteractuable = true;
+    public bool isInteractuable = true;
 
     public virtual string GetInteractPromt()
     {
         if (isInteractuable)
-            return string.Format($"Interact {item.displayName}");
+            return string.Format($"Press <b>[F]</b> to interact with {item.displayName}");
         return string.Empty;
     }
 

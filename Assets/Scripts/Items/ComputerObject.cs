@@ -6,17 +6,15 @@ using UnityEngine;
 public class ComputerObject : ItemObject
 {
     [SerializeField] CinemachineVirtualCamera computerCamera;
-    [SerializeField] CinemachineVirtualCamera mainCam;
-    [SerializeField] PlayerInteraction interaction;
+    [SerializeField] CameraManager camManager;
+    [SerializeField] PlayerManager playerManager;
+    [SerializeField] ComputerManager computerManager;
 
     public override void OnInteract()
     {
-        switchCam();
-    }
-
-    private void switchCam()
-    {
-        computerCamera.Priority += 1;
-        interaction.enabled = false;
+        camManager.switchCam(computerCamera);
+        playerManager.EnablePlayerInputs(false);
+        playerManager.changeCursorState(CursorLockMode.None);
+        //isInteractuable = false;
     }
 }

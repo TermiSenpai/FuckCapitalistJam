@@ -49,7 +49,7 @@ public class PlayerInteraction : MonoBehaviour
     private void SetPromptText()
     {
         promptText.gameObject.SetActive(true);
-        promptText.text = string.Format("<b>[F]</b> {0}", curInteractuable.GetInteractPromt());
+        promptText.text = string.Format(curInteractuable.GetInteractPromt());
     }
 
     public void OnInteractInput(InputAction.CallbackContext context)
