@@ -1722,9 +1722,6 @@ MonoBehaviour:
   item: {fileID: 11400000, guid: c6e612484d7038240817886afc579abe, type: 2}
   isInteractuable: 1
   computerCamera: {fileID: 902650301}
-  camManager: {fileID: 2036848457}
-  playerManager: {fileID: 2036848459}
-  computerManager: {fileID: 2036848460}
 --- !u!1 &1218508550
 GameObject:
   m_ObjectHideFlags: 0
@@ -2332,6 +2329,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1124982905}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: set_layer
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 9
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &1923755397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2381,7 +2390,6 @@ GameObject:
   - component: {fileID: 2036848458}
   - component: {fileID: 2036848457}
   - component: {fileID: 2036848459}
-  - component: {fileID: 2036848460}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -2430,19 +2438,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputs: {fileID: 633432986}
---- !u!114 &2036848460
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2036848456}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8da76c71691cecd459679fb4caebcc62, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  computerBTN: {fileID: 1923755396}
 --- !u!1 &2117584205
 GameObject:
   m_ObjectHideFlags: 0
