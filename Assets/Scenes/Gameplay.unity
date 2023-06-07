@@ -2516,11 +2516,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9db764387100e0243930cc081aef2412, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioEvents: []
-  secondsBeforeFirstEvent: 15
-  minSeconds: 15
-  maxSeconds: 60
-  source: {fileID: 1870320903}
+  config: {fileID: 11400000, guid: 7caa057d6b4e1cf40b7d2970020816d0, type: 2}
 --- !u!4 &1870320905
 Transform:
   m_ObjectHideFlags: 0
