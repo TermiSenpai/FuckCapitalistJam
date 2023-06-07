@@ -29,7 +29,7 @@ public class JuegoMemoria : MonoBehaviour
         {
             for(int y=0; y< m_PlayAreaY; y++)
             {
-                GameObject fichaGO = Instantiate(m_Chip);
+                GameObject fichaGO = Instantiate(m_Chip, new Vector3(0,0,0),Quaternion.identity);
                 fichaGO.transform.localScale = new Vector3(chipsize, 0.1f, chipsize);
 
                 fichaGO.transform.SetParent(m_PlayArea);
