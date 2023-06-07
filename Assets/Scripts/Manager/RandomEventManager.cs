@@ -4,12 +4,7 @@ using UnityEngine;
 
 public class RandomEventManager : MonoBehaviour
 {
-    public List<AudioClip> audioEvents;
-    public float secondsBeforeFirstEvent;
-    public float increaseStress = 15;
-    public float minSeconds = 15f;
-    public float maxSeconds = 60f;
-
+    [SerializeField] private RandomEventConfig config;
     [SerializeField] private AudioSource source;
     private float secondsBeforeEvent;
     private AudioClip selectedClip;
@@ -17,7 +12,7 @@ public class RandomEventManager : MonoBehaviour
     private void Start()
     {
         //selectedClip = randomClip();
-        secondsBeforeEvent = secondsBeforeFirstEvent;
+        secondsBeforeEvent = config.secondsBeforeFirstEvent;
     }
 
     private void Update()
@@ -42,14 +37,14 @@ public class RandomEventManager : MonoBehaviour
     {
         secondsBeforeEvent = randomSeconds();
         //selectedClip = randomClip();
-        PlayerStress.Stress += increaseStress;
+        PlayerStress.Stress += config.increaseStress;
     }
 
     private AudioClip randomClip()
     {
-        int index = Random.Range(0, audioEvents.Count);
-        return audioEvents[index];
+        int index = Random.Range(0, config.audioEvents.Count);
+        return config.audioEvents[index];
     }
 
-    private float randomSeconds() { return Random.Range(minSeconds, maxSeconds); }
+    private float randomSeconds() { return Random.Range(config.minSeconds, config.maxSeconds); }
 }
