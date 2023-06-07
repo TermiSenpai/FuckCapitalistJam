@@ -14,21 +14,17 @@ public class DebugStress : Editor
 
         if (GUILayout.Button("Increase"))
         {
-            PlayerStress.stress += stressBar.debugValue;
+            PlayerStress.Stress += stressBar.debugValue;
 
-            if(PlayerStress.stress > 100)
-                PlayerStress.stress = 100;
-
-            stressBar.increaseStress(PlayerStress.stress);
+            if(PlayerStress.Stress > 100)
+                PlayerStress.Stress = 100;
         }
         if (GUILayout.Button("Decrease"))
         {
-            PlayerStress.stress -= stressBar.debugValue;
+            PlayerStress.Stress -= stressBar.debugValue;
 
-            if (PlayerStress.stress <= 0 )
-                PlayerStress.stress = 0;
-
-            stressBar.decreaseStress(PlayerStress.stress);
+            if (PlayerStress.Stress <= 0 )
+                PlayerStress.Stress = 0;
         }
     }
 }

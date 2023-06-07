@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,13 +9,13 @@ public class StressBar : MonoBehaviour
     [SerializeField] Slider stressSlider;
 
     public float debugValue;
-    [Tooltip("Valor más bajo, más velocidad"),Range(0f, 0.1f)]
+    [Tooltip("Valor más bajo, más velocidad"), Range(0f, 0.1f)]
     public float speedValue;
     Coroutine barAnim;
 
     private void Start()
     {
-        changeStress(PlayerStress.stress);
+        changeStress(PlayerStress.Stress);
     }
 
     public void changeStress(float value)
@@ -22,15 +23,32 @@ public class StressBar : MonoBehaviour
         stressSlider.value = value;
     }
 
-
-    public void increaseStress(float value)
+    private void OnEnable()
     {
-        barAnim = StartCoroutine(increaseStressBarAnim(PlayerStress.stress));
+        PlayerStress.ValueChanged += onStressChanged;
     }
 
-    public void decreaseStress(float value)
+    private void OnDisable()
     {
-        barAnim = StartCoroutine(decreaseStressBarAnim(PlayerStress.stress));
+        PlayerStress.ValueChanged -= onStressChanged;
+    }
+
+    private void onStressChanged(object sender, EventArgs e)
+    {
+        if (PlayerStress.Stress < stressSlider.value)
+            decreaseStress();
+        else if (PlayerStress.Stress > stressSlider.value)
+            increaseStress();
+    }
+
+    public void increaseStress()
+    {
+        barAnim = StartCoroutine(increaseStressBarAnim(PlayerStress.Stress));
+    }
+
+    public void decreaseStress()
+    {
+        barAnim = StartCoroutine(decreaseStressBarAnim(PlayerStress.Stress));
     }
 
     IEnumerator increaseStressBarAnim(float newValue)
