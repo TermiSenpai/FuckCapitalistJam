@@ -2,15 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class RandomEventManager : MonoBehaviour
 {
     [SerializeField] private RandomEventConfig config;
-    [SerializeField] private AudioSource source;
+    private AudioSource source;
     private float secondsBeforeEvent;
     private AudioClip selectedClip;
 
     private void Start()
     {
+        source = GetComponent<AudioSource>();
         //selectedClip = randomClip();
         secondsBeforeEvent = config.secondsBeforeFirstEvent;
     }
@@ -18,8 +20,8 @@ public class RandomEventManager : MonoBehaviour
     private void Update()
     {
         secondsBeforeEvent -= Time.deltaTime;
-        
-        if(secondsBeforeEvent <= 0)
+
+        if (secondsBeforeEvent <= 0)
         {
             playEvent();
         }
