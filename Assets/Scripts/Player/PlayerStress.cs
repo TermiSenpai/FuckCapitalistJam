@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class PlayerStress
 {
-    public static float stress = 0;
+    public static float stress = 10;
 }

@@ -8,23 +8,29 @@ public class StressBar : MonoBehaviour
     [SerializeField] Slider stressSlider;
 
     public float debugValue;
-    [Range(0f, 0.1f)]
+    [Tooltip("Valor más bajo, más velocidad"),Range(0f, 0.1f)]
     public float speedValue;
     Coroutine barAnim;
+
+    private void Start()
+    {
+        changeStress(PlayerStress.stress);
+    }
 
     public void changeStress(float value)
     {
         stressSlider.value = value;
     }
 
+
     public void increaseStress(float value)
     {
-        barAnim = StartCoroutine(increaseStressBarAnim(stressSlider.value + value));
+        barAnim = StartCoroutine(increaseStressBarAnim(PlayerStress.stress));
     }
 
     public void decreaseStress(float value)
     {
-        barAnim = StartCoroutine(decreaseStressBarAnim(stressSlider.value - value));
+        barAnim = StartCoroutine(decreaseStressBarAnim(PlayerStress.stress));
     }
 
     IEnumerator increaseStressBarAnim(float newValue)
