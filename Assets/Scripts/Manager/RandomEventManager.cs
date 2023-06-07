@@ -6,7 +6,7 @@ public class RandomEventManager : MonoBehaviour
 {
     public List<AudioClip> audioEvents;
     public float secondsBeforeFirstEvent;
-
+    public float increaseStress = 15;
     public float minSeconds = 15f;
     public float maxSeconds = 60f;
 
@@ -16,7 +16,7 @@ public class RandomEventManager : MonoBehaviour
 
     private void Start()
     {
-        selectedClip = randomClip();
+        //selectedClip = randomClip();
         secondsBeforeEvent = secondsBeforeFirstEvent;
     }
 
@@ -32,7 +32,7 @@ public class RandomEventManager : MonoBehaviour
 
     private void playEvent()
     {
-        source.PlayOneShot(selectedClip);
+        //source.PlayOneShot(selectedClip);
 
 
         OnPlayEvent();
@@ -41,7 +41,8 @@ public class RandomEventManager : MonoBehaviour
     private void OnPlayEvent()
     {
         secondsBeforeEvent = randomSeconds();
-        selectedClip = randomClip();
+        //selectedClip = randomClip();
+        PlayerStress.Stress += increaseStress;
     }
 
     private AudioClip randomClip()
