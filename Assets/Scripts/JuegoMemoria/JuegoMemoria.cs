@@ -9,6 +9,7 @@ public class JuegoMemoria : MonoBehaviour
 {
     [Header("Valores")]
     //public GameObject plano;
+    [Tooltip("Texto al realizar hover de la variable en el editor") ,SerializeField] Vector2Int playArea;
     [SerializeField] int m_PlayAreaX = 2;
     [SerializeField] int m_PlayAreaY = 2;
     [SerializeField] int m_NumeroPares = 0;
