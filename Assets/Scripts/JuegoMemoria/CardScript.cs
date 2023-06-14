@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
 
-public class Ficha : MonoBehaviour
+public class CardScript : MonoBehaviour
 {
     [Tooltip("Animator responsable de las animaciones"),SerializeField] private Animator m_Animator;
     private string m_Name;

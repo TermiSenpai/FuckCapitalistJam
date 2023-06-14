@@ -276,7 +276,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &347927446
 RectTransform:
   m_ObjectHideFlags: 0
@@ -787,13 +787,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab697a3b1e2bd4d46a037d3d6ea0a400, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playArea: {x: 0, y: 0}
-  m_PlayAreaX: 2
-  m_PlayAreaY: 2
-  m_NumeroFichas: 0
-  m_NumeroPares: 0
   m_Chip: {fileID: 7166560374443243898, guid: e879c732b3a32224d9c870aaf13e97b2, type: 3}
-  m_PlayArea: {fileID: 1195646044}
+  m_PlayAreaTranform: {fileID: 1195646044}
   Timer: {fileID: 1063173938}
   Level: {fileID: 687329188}
   ResfreshButton: {fileID: 347927447}

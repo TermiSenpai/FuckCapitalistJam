@@ -34,7 +34,7 @@ public class RayCast : MonoBehaviour
             if(Physics.Raycast(ray,out hit,100,mask))
             {
                 Debug.Log(hit.transform.name);
-                Ficha fich = hit.collider.gameObject.GetComponentInChildren<Ficha>();
+                CardScript fich = hit.collider.gameObject.GetComponentInChildren<CardScript>();
                 Debug.Log(fich);
                 fich.MostrarFrente();
              }

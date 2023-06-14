@@ -7,54 +7,77 @@ using TMPro;
 
 public class JuegoMemoria : MonoBehaviour
 {
-    [Header("Valores")]
-    //public GameObject plano;
-    [Tooltip("Texto al realizar hover de la variable en el editor") ,SerializeField] Vector2Int playArea;
-    [SerializeField] int m_PlayAreaX = 2;
-    [SerializeField] int m_PlayAreaY = 2;
-    [SerializeField] int m_NumeroFichas = 0;
-    [SerializeField] int m_NumeroPares = 0;
-    /*[SerializeField]*/ Vector2 m_SpaceBetweenChips = new Vector2(64,88);
-    Vector2 m_cardSize = new Vector2(64, 88);
-    Vector2 m_cardScale = new Vector2(0, 0);
-    /*[SerializeField]*/ Vector2 m_MaxSize /*= Vector2.zero*/;
-    float maxSize = 0;
+    //[Header("Valores")]
 
-    [Header("Referencias")]
-    [SerializeField] GameObject m_Chip;
-    [SerializeField] RectTransform m_PlayArea;
-    [SerializeField] TextMeshProUGUI Timer;
-    [SerializeField] TextMeshProUGUI Level;
-    [SerializeField] Button ResfreshButton;
+    //variables
+    /// <summary>
+    /// m_NumCards: guarda el numero de cartas en pantalla (las creadas para el nivel)
+    /// m_NumeroPares: guarda el numero de pares ya encontrados
+    /// m_Level: guarda el numero del nivel actual
+    /// 
+    /// m_playArea: guarda el numero de filas y columnas del nivel
+    /// m_SpaceBetweenCards: variable utilizada para calcular y guardar el espacio entre las cartas
+    /// m_cardSize: variable para guardar las medidas de la carta (64,88)
+    /// m_cardScale: variable que se usa para calcular y guardar la escala de todas cartas del nivel
+    /// m_MaxSize: se usa para guardar el maximo tamaño en escala en los ejes x e y
+    /// 
+    /// maxSize: variable usada para guardar el tamaño maximo de la carta ya que la escala puede ser diferente en x e y . Por lo tanto si hay diferencia se toma la menor de las 2
+    /// m_Time: variable utilizada por el temporizador para saber el tiempo que le queda al jugador de juego
+    /// 
+    /// m_IsPlaying: variable utilizada para saber si el juego esta en marcha o no
+    /// 
+    /// Cards: Lista para guardas todas las cartas del nivel
+    /// FacedUpCards: Lista que guarda todas las cartas que estan cara arriba
+    /// CardsIds: Lista creada para la mezcla y asignacion de Ids a las cartas
+    /// </summary>
 
+    private int m_NumCards = 0;
+    private int m_NumeroPares = 0;
+    private int m_Level = 0;
 
+    private Vector2Int m_playArea = new Vector2Int(2, 2);
+    private Vector2 m_SpaceBetweenCards = new Vector2(64,88);
+    private Vector2 m_cardSize = new Vector2(64, 88);
+    private Vector2 m_cardScale = new Vector2(0, 0);
+    private Vector2 m_MaxSize /*= Vector2.zero*/;
+
+    private float maxSize = 0;
     private float m_Time = 60;
 
+    private bool m_IsPlaying = true;
+
     private List<GameObject> Cards;
-    public List<Ficha> FacedUpCards;
-    public List<int> CardsIds;
+    private List<CardScript> FacedUpCards;
+    private List<int> CardsIds;
 
-    public int m_Level = 0;
-
-    public bool m_IsPlaying = true;
+    [Header("References")]
+    [Tooltip("Prefab of the used card"), SerializeField] GameObject m_Card;
+    [Tooltip("RectTransform of the play Area where the cards are gonna be placed"), SerializeField] RectTransform m_PlayAreaTranform;
+    [Tooltip("TextMeshPro used for beeing a timer"), SerializeField] TextMeshProUGUI Timer;
+    [Tooltip("TextMeshPro used for showing the level the user is currently playing"), SerializeField] TextMeshProUGUI Level;
+    //[Tooltip("Button for Refresing the Play Area"), SerializeField] Button ResfreshButton;
 
     void Start()
     {
         Cards = new List<GameObject>();
-        FacedUpCards = new List<Ficha>();
+        FacedUpCards = new List<CardScript>();
         createCards();
-        ResfreshButton.onClick.AddListener(delegate { RefreshCards(); });
+        //ResfreshButton.onClick.AddListener(delegate { RefreshCards(); });
     }
 
 
     // Update is called once per frame
     void Update()
     {
+        //miramos si estamos jugando
         if (m_IsPlaying)
         {
+            //si estamos jugando empieza el temporizador
             CountDown();
-            if (m_NumeroPares == (m_NumeroFichas / 2))
+            //y miramos si hemos ganado
+            if (m_NumeroPares == (m_NumCards / 2))
             {
+                //reseteamos la variable de numero de pares a 0 ahora para que no se vuelva a repetir el invoke hasta que se termine el segundo
                 m_NumeroPares = 0;
                 Debug.Log("You Win");
                 Invoke("NextLevel", 1f);
@@ -66,39 +89,39 @@ public class JuegoMemoria : MonoBehaviour
 
     //crear Cartas
     /// <summary>
-    /// createCards
-    /// MezclaIds
-    /// RemoveCards
+    /// createCards : funcion que crea las cartas (necesita un retoque para que cree las cartas faltantes solo)
+    /// MezclaIds : funcion que crea todos los Ids necesarios y los mezcla
+    /// RemoveCards : funcion que elimina todas las cartas al actualizar o cambiar de nivel (necesita un retoque para que elimine las cartas sobrantes solo)
     /// </summary>
     /// 
 
     //cambios necesarios para que cree cartas ya sea al principio o las necesarias segun las que falten por crear
     private void createCards()
     {
-        m_NumeroFichas = m_PlayAreaX * m_PlayAreaY;
+        m_NumCards = m_playArea.x * m_playArea.y;
         MezclaIds();
-        m_MaxSize = new Vector2(m_PlayArea.rect.width, m_PlayArea.rect.height);
-        Debug.Log(m_Chip.transform.localScale);
+        m_MaxSize = new Vector2(m_PlayAreaTranform.rect.width, m_PlayAreaTranform.rect.height);
+        Debug.Log(m_Card.transform.localScale);
         Debug.Log(m_MaxSize);
 
         //El Area de juego esta en la mitad de la pantalla, calculamos el tamaño del tablero para que se encuentre en el medio
 
-        m_cardScale = ChipSize();
-        m_SpaceBetweenChips = new Vector2((m_cardSize.x * m_cardScale.x)*2f, (m_cardSize.y * m_cardScale.y)*2f);
-        Vector2 posicionInicialFicha = CalcularPosicionFicha();
-        //creamos la fichas
-        for (int x = 0; x < m_PlayAreaX; x++)
+        m_cardScale = CardSize();
+        m_SpaceBetweenCards = new Vector2((m_cardSize.x * m_cardScale.x)*2f, (m_cardSize.y * m_cardScale.y)*2f);
+        Vector2 CardInitialPos = CalcCardPos();
+        //creamos la cartas
+        for (int x = 0; x < m_playArea.x; x++)
         {
-            for (int y = 0; y < m_PlayAreaY; y++)
+            for (int y = 0; y < m_playArea.y; y++)
             {
-                GameObject fichaGO = Instantiate(m_Chip, new Vector3(0, 0, 0), Quaternion.identity);
-                fichaGO.GetComponent<Ficha>().changeName(CardsIds[(m_PlayAreaY * x) + y].ToString());
-                fichaGO.GetComponent<Ficha>().setGameManagerJMemoria(this);
-                Cards.Add(fichaGO);
-                fichaGO.transform.localScale = new Vector3(maxSize, maxSize, 0.1f);
+                GameObject CardGO = Instantiate(m_Card, new Vector3(0, 0, 0), Quaternion.identity);
+                CardGO.GetComponent<CardScript>().changeName(CardsIds[(m_playArea.y * x) + y].ToString());
+                CardGO.GetComponent<CardScript>().setGameManagerJMemoria(this);
+                Cards.Add(CardGO);
+                CardGO.transform.localScale = new Vector3(maxSize, maxSize, 0.1f);
 
-                fichaGO.transform.SetParent(m_PlayArea);
-                fichaGO.transform.localPosition = new Vector3((x * (m_SpaceBetweenChips.x)) - posicionInicialFicha.x, (y * m_SpaceBetweenChips.y) - posicionInicialFicha.y, 0);
+                CardGO.transform.SetParent(m_PlayAreaTranform);
+                CardGO.transform.localPosition = new Vector3((x * (m_SpaceBetweenCards.x)) - CardInitialPos.x, (y * m_SpaceBetweenCards.y) - CardInitialPos.y, 0);
             }
         }
     }
@@ -107,7 +130,7 @@ public class JuegoMemoria : MonoBehaviour
     {
         List<int> idsCards = new List<int>();
         {
-            for(int i = 0;i < m_NumeroFichas; i++)
+            for(int i = 0;i < m_NumCards; i++)
             {
                 idsCards.Add(i/2);
             }
@@ -125,7 +148,7 @@ public class JuegoMemoria : MonoBehaviour
     }
 
 
-    //a cambiar, en vez de eliminar las fichar, mirar cuantas se necesitan crear y reutilizar las ya creadas
+    //a cambiar, en vez de eliminar las cartas, mirar cuantas se necesitan crear y reutilizar las ya creadas
     private void RemoveCards()
     {
         foreach (GameObject go in Cards)
@@ -145,22 +168,22 @@ public class JuegoMemoria : MonoBehaviour
 
     //POSICION
     /// <summary>
-    /// funcion CALCULARPOSICIONFICHA calcula la posicion media de todo el area de juego para posicionar las Cartas
-    /// funcion CHIPSIZE calcula el tamaño de cada carta
+    /// funcion CalcCardPos calcula la posicion media de todo el area de juego para posicionar las Cartas
+    /// funcion CardSize calcula el tamaño de cada carta
     /// </summary>
 
-    private Vector2 CalcularPosicionFicha()
+    private Vector2 CalcCardPos()
     {
-        float posicionX = (m_PlayAreaX - 1) * m_SpaceBetweenChips.x;
-        float posicionY = (m_PlayAreaY - 1) * m_SpaceBetweenChips.y;
+        float posicionX = (m_playArea.x - 1) * m_SpaceBetweenCards.x;
+        float posicionY = (m_playArea.y - 1) * m_SpaceBetweenCards.y;
 
         return new Vector2(posicionX/2,posicionY/2);
     }
 
-    private Vector2 ChipSize()
+    private Vector2 CardSize()
     {
-        float maxSizeX = m_MaxSize.x/ (m_PlayAreaX*(m_cardSize.x*2f));
-        float maxSizeY = m_MaxSize.y / (m_PlayAreaY*(m_cardSize.y*2f));
+        float maxSizeX = m_MaxSize.x/ (m_playArea.x* (m_cardSize.x*2f));
+        float maxSizeY = m_MaxSize.y / (m_playArea.y* (m_cardSize.y*2f));
 
         maxSize = 0;
         if (maxSizeX > maxSizeY)
@@ -211,7 +234,14 @@ public class JuegoMemoria : MonoBehaviour
 
 
 
-    public void facedUp(Ficha GO)
+    //PAREJAS
+    /// <summary>
+    /// facedUp: funcion que se llama al clickear sobre una carta y esta se pone cara arriba. Se encarga de cuardar las cartas
+    ///     boca arriba y de ver si son pares
+    /// resetCards : Corutina para dar la vuelta a las cartas y mostrar el reverso. Se hace despues de un segundo
+    /// </summary>
+
+    public void facedUp(CardScript GO)
     {
         FacedUpCards.Add(GO);
         Debug.Log(GO);
@@ -234,26 +264,31 @@ public class JuegoMemoria : MonoBehaviour
         }
     }
 
-    private IEnumerator resetCards(Ficha c1,Ficha c2)
+    private IEnumerator resetCards(CardScript c1, CardScript c2)
     {
         yield return new WaitForSeconds(1);
         c1.MostrarReverso();
         c2.MostrarReverso();
-        /*foreach (Ficha face in FacedUpCards)
+        /*foreach (CardScript face in FacedUpCards)
         {
             face.MostrarReverso();
             FacedUpCards.Remove(face);
         }*/
-        
+
     }
+
+    //LEVELS
+    /// <summary>
+    /// NextLevel : funcion utilizada para cambiar de nivel . Altera la suma de 2 filas en la x y 1 en la y . Y resetea las variables necesarias
+    /// </summary>
 
 
     private void NextLevel()
     {
         if(m_Level%2==0)
-            m_PlayAreaX+=2;
+            m_playArea.x+= 2;
         else
-            m_PlayAreaY++;
+            m_playArea.y++;
         RefreshCards();
         m_Time = 60;
         m_Level++;
