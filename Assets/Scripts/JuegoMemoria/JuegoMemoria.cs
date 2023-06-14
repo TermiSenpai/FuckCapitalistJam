@@ -12,6 +12,7 @@ public class JuegoMemoria : MonoBehaviour
     [Tooltip("Texto al realizar hover de la variable en el editor") ,SerializeField] Vector2Int playArea;
     [SerializeField] int m_PlayAreaX = 2;
     [SerializeField] int m_PlayAreaY = 2;
+    [SerializeField] int m_NumeroFichas = 0;
     [SerializeField] int m_NumeroPares = 0;
     /*[SerializeField]*/ Vector2 m_SpaceBetweenChips = new Vector2(64,88);
     Vector2 m_cardSize = new Vector2(64, 88);
@@ -23,22 +24,44 @@ public class JuegoMemoria : MonoBehaviour
     [SerializeField] GameObject m_Chip;
     [SerializeField] RectTransform m_PlayArea;
     [SerializeField] TextMeshProUGUI Timer;
+    [SerializeField] TextMeshProUGUI Level;
     [SerializeField] Button ResfreshButton;
 
 
-    private float m_Time = 3;
+    private float m_Time = 60;
 
     private List<GameObject> Cards;
+    public List<Ficha> FacedUpCards;
     public List<int> CardsIds;
+
+    public int m_Level = 0;
 
     public bool m_IsPlaying = true;
 
     void Start()
     {
         Cards = new List<GameObject>();
+        FacedUpCards = new List<Ficha>();
         createCards();
         ResfreshButton.onClick.AddListener(delegate { RefreshCards(); });
     }
+
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (m_IsPlaying)
+        {
+            CountDown();
+            if (m_NumeroPares == (m_NumeroFichas / 2))
+            {
+                m_NumeroPares = 0;
+                Debug.Log("You Win");
+                Invoke("NextLevel", 1f);
+            }
+        }
+    }
+
 
 
     //crear Cartas
@@ -47,13 +70,14 @@ public class JuegoMemoria : MonoBehaviour
     /// MezclaIds
     /// RemoveCards
     /// </summary>
+    /// 
+
+    //cambios necesarios para que cree cartas ya sea al principio o las necesarias segun las que falten por crear
     private void createCards()
     {
-        m_NumeroPares = m_PlayAreaX * m_PlayAreaY;
+        m_NumeroFichas = m_PlayAreaX * m_PlayAreaY;
         MezclaIds();
-        //CardsIds = MezclaIds();
         m_MaxSize = new Vector2(m_PlayArea.rect.width, m_PlayArea.rect.height);
-        //plano.transform.localScale = new Vector3(m_MaxSize.x,0.1f, m_MaxSize.y);
         Debug.Log(m_Chip.transform.localScale);
         Debug.Log(m_MaxSize);
 
@@ -69,6 +93,7 @@ public class JuegoMemoria : MonoBehaviour
             {
                 GameObject fichaGO = Instantiate(m_Chip, new Vector3(0, 0, 0), Quaternion.identity);
                 fichaGO.GetComponent<Ficha>().changeName(CardsIds[(m_PlayAreaY * x) + y].ToString());
+                fichaGO.GetComponent<Ficha>().setGameManagerJMemoria(this);
                 Cards.Add(fichaGO);
                 fichaGO.transform.localScale = new Vector3(maxSize, maxSize, 0.1f);
 
@@ -82,7 +107,7 @@ public class JuegoMemoria : MonoBehaviour
     {
         List<int> idsCards = new List<int>();
         {
-            for(int i = 0;i < m_NumeroPares; i++)
+            for(int i = 0;i < m_NumeroFichas; i++)
             {
                 idsCards.Add(i/2);
             }
@@ -99,6 +124,8 @@ public class JuegoMemoria : MonoBehaviour
         createCards();
     }
 
+
+    //a cambiar, en vez de eliminar las fichar, mirar cuantas se necesitan crear y reutilizar las ya creadas
     private void RemoveCards()
     {
         foreach (GameObject go in Cards)
@@ -112,12 +139,7 @@ public class JuegoMemoria : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(m_IsPlaying)
-        CountDown();    
-    }
+    
 
 
 
@@ -187,6 +209,56 @@ public class JuegoMemoria : MonoBehaviour
         Timer.text = string.Format("{0:00}:{1:00}",minutes,seconds);
     }
 
+
+
+    public void facedUp(Ficha GO)
+    {
+        FacedUpCards.Add(GO);
+        Debug.Log(GO);
+        if(FacedUpCards.Count >= 2)
+        {
+            if (String.Compare(FacedUpCards[0].getName(), FacedUpCards[1].getName())==0)
+            {
+                Debug.Log("par");
+                m_NumeroPares++;
+                FacedUpCards.RemoveAt(1);
+                FacedUpCards.RemoveAt(0);
+            }
+            else
+            {
+                Invoke("resetCards", 1f);
+                //resetCards();
+            }
+            
+        }
+    }
+
+    private void resetCards()
+    {
+        FacedUpCards[0].MostrarReverso();
+        FacedUpCards[1].MostrarReverso();
+        /*foreach (Ficha face in FacedUpCards)
+        {
+            face.MostrarReverso();
+            FacedUpCards.Remove(face);
+        }*/
+        FacedUpCards.RemoveAt(1);
+        FacedUpCards.RemoveAt(0);
+    }
+
+
+    private void NextLevel()
+    {
+        if(m_Level%2==0)
+            m_PlayAreaX+=2;
+        else
+            m_PlayAreaY++;
+        RefreshCards();
+        m_Time = 60;
+        m_Level++;
+        Level.text = "Level " + m_Level;
+        
+    }
 
 
 
