@@ -215,35 +215,36 @@ public class JuegoMemoria : MonoBehaviour
     {
         FacedUpCards.Add(GO);
         Debug.Log(GO);
-        if(FacedUpCards.Count >= 2)
+        if(FacedUpCards.Count%2== 0)
         {
             if (String.Compare(FacedUpCards[0].getName(), FacedUpCards[1].getName())==0)
             {
                 Debug.Log("par");
                 m_NumeroPares++;
-                FacedUpCards.RemoveAt(1);
-                FacedUpCards.RemoveAt(0);
+                
             }
             else
             {
-                Invoke("resetCards", 1f);
-                //resetCards();
+                //Invoke("resetCards", 1f);
+                StartCoroutine(resetCards(FacedUpCards[0], FacedUpCards[1]));
             }
-            
+            FacedUpCards.RemoveAt(1);
+            FacedUpCards.RemoveAt(0);
+
         }
     }
 
-    private void resetCards()
+    private IEnumerator resetCards(Ficha c1,Ficha c2)
     {
-        FacedUpCards[0].MostrarReverso();
-        FacedUpCards[1].MostrarReverso();
+        yield return new WaitForSeconds(1);
+        c1.MostrarReverso();
+        c2.MostrarReverso();
         /*foreach (Ficha face in FacedUpCards)
         {
             face.MostrarReverso();
             FacedUpCards.Remove(face);
         }*/
-        FacedUpCards.RemoveAt(1);
-        FacedUpCards.RemoveAt(0);
+        
     }
 
 
@@ -256,7 +257,7 @@ public class JuegoMemoria : MonoBehaviour
         RefreshCards();
         m_Time = 60;
         m_Level++;
-        Level.text = "Level " + m_Level;
+        Level.text = "Level "+m_Level;
         
     }
 
