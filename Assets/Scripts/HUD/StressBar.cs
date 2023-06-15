@@ -18,11 +18,6 @@ public class StressBar : MonoBehaviour
         changeStress(PlayerStress.Stress);
     }
 
-    public void changeStress(float value)
-    {
-        stressSlider.value = value;
-    }
-
     private void OnEnable()
     {
         PlayerStress.ValueChanged += onStressChanged;
@@ -33,8 +28,16 @@ public class StressBar : MonoBehaviour
         PlayerStress.ValueChanged -= onStressChanged;
     }
 
+    public void changeStress(float value)
+    {
+        stressSlider.value = value;
+    }
+
     private void onStressChanged(object sender, EventArgs e)
     {
+        if(barAnim != null)
+            StopCoroutine(barAnim);       
+
         if (PlayerStress.Stress < stressSlider.value)
             decreaseStress();
         else if (PlayerStress.Stress > stressSlider.value)
@@ -43,6 +46,7 @@ public class StressBar : MonoBehaviour
 
     public void increaseStress()
     {
+
         barAnim = StartCoroutine(increaseStressBarAnim(PlayerStress.Stress));
     }
 
@@ -53,9 +57,6 @@ public class StressBar : MonoBehaviour
 
     IEnumerator increaseStressBarAnim(float newValue)
     {
-        if (newValue >= 100)
-            newValue = 100;
-
         while (stressSlider.value < newValue)
         {
             stressSlider.value += 0.5f;
@@ -66,13 +67,26 @@ public class StressBar : MonoBehaviour
 
     IEnumerator decreaseStressBarAnim(float newValue)
     {
-        if (newValue <= 0)
-            newValue = 0;
-
         while (stressSlider.value > newValue)
         {
             stressSlider.value -= 0.5f;
             yield return new WaitForSeconds(speedValue);
+        }
+    }
+
+    public void checkStress()
+    {
+        if(stressSlider.value >= 100)
+        {
+            speedValue = 0.1f;
+            PlayerStress.Stress = 0;
+            PlayerStress.canModify = false;
+        }
+
+        else if(stressSlider.value <= 0)
+        {
+            speedValue = 0.02f;
+            PlayerStress.canModify = true;
         }
     }
 }
