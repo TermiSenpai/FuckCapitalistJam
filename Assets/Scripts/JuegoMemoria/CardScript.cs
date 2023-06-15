@@ -11,10 +11,11 @@ public class CardScript : MonoBehaviour
     private string m_Name;
     [Tooltip("TextMeshPro para poner los numeros de los pares"),SerializeField] private TextMeshProUGUI m_text;
     [Tooltip("Parte de la cara"),SerializeField] private Button m_caraButton;
-    private bool faceUp = false;
+    [Tooltip("Parte del Reves"),SerializeField] private Button m_RevesButton;
+    //private bool faceUp = false;
     private JuegoMemoria GameManagerJMemoria;
     //[SerializeField] private Image cara;
-    private int veces = 0;
+    //private int veces = 0;
 
 
     // Start is called before the first frame update
@@ -56,14 +57,27 @@ public class CardScript : MonoBehaviour
         Debug.Log("clicked");
         m_Animator.Play("FichaReversoAlFrente");
         m_caraButton.enabled = false;
-        faceUp = true;
+        //faceUp = true;
         GameManagerJMemoria.facedUp(this);
         //Invoke("changeColor", 0.5f);
     }
 
+    //funcion llamada desde el script JuegoMemoria para asignarse a si mismo al crear la carta
     public void setGameManagerJMemoria(JuegoMemoria JM)
     {
         GameManagerJMemoria = JM;
+    }
+
+    public void ActivateReverse(bool activate)
+    {
+        if(activate)
+        {
+            m_RevesButton.enabled = true;
+        }
+        else
+        {
+            m_RevesButton.enabled = false;
+        }
     }
 
 /*
@@ -83,7 +97,7 @@ public class CardScript : MonoBehaviour
         Debug.Log("clicked cara");
         m_Animator.Play("FichaFrenteAlReverso");
         m_caraButton.enabled = true;
-        faceUp = false;
+        //faceUp = false;
         //Invoke("changeColor", 0.5f);
     }
 

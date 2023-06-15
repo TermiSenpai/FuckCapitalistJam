@@ -35,10 +35,10 @@ public class JuegoMemoria : MonoBehaviour
     private int m_NumeroPares = 0;
     private int m_Level = 0;
 
-    private Vector2Int m_playArea = new Vector2Int(2, 2);
-    private Vector2 m_SpaceBetweenCards = new Vector2(64,88);
+    private Vector2Int m_playArea = new Vector2Int(16, 16);
+    public Vector2 m_SpaceBetweenCards = new Vector2(64, 88);
     private Vector2 m_cardSize = new Vector2(64, 88);
-    private Vector2 m_cardScale = new Vector2(0, 0);
+    public Vector2 m_cardScale = new Vector2(0, 0);
     private Vector2 m_MaxSize /*= Vector2.zero*/;
 
     private float maxSize = 0;
@@ -48,21 +48,40 @@ public class JuegoMemoria : MonoBehaviour
 
     private List<GameObject> Cards;
     private List<CardScript> FacedUpCards;
-    private List<int> CardsIds;
+    public List<int> CardsIds;
 
     [Header("References")]
     [Tooltip("Prefab of the used card"), SerializeField] GameObject m_Card;
     [Tooltip("RectTransform of the play Area where the cards are gonna be placed"), SerializeField] RectTransform m_PlayAreaTranform;
     [Tooltip("TextMeshPro used for beeing a timer"), SerializeField] TextMeshProUGUI Timer;
     [Tooltip("TextMeshPro used for showing the level the user is currently playing"), SerializeField] TextMeshProUGUI Level;
-    //[Tooltip("Button for Refresing the Play Area"), SerializeField] Button ResfreshButton;
+    [Tooltip("Button for Reset game the Play Area -> start on lvl 0"), SerializeField] Button ResetButton;
+
+
+
+    public int m_lastId = 0;
+    private int m_lastLevelCardCount = 0;
+    private float m_initialTime = 3;
+    [SerializeField] TextMeshProUGUI m_initialTimer;
+
+
+
+
+
+
+
+
+
+
+
 
     void Start()
     {
         Cards = new List<GameObject>();
         FacedUpCards = new List<CardScript>();
+        CardsIds = new List<int>();
         createCards();
-        //ResfreshButton.onClick.AddListener(delegate { RefreshCards(); });
+        ResetButton.onClick.AddListener(delegate { restart(); });
     }
 
 
@@ -80,8 +99,16 @@ public class JuegoMemoria : MonoBehaviour
                 //reseteamos la variable de numero de pares a 0 ahora para que no se vuelva a repetir el invoke hasta que se termine el segundo
                 m_NumeroPares = 0;
                 Debug.Log("You Win");
+                foreach (GameObject card in Cards)
+                {
+                    card.GetComponent<CardScript>().MostrarReverso();
+                }
                 Invoke("NextLevel", 1f);
             }
+        }
+        else
+        {
+
         }
     }
 
@@ -101,49 +128,72 @@ public class JuegoMemoria : MonoBehaviour
         m_NumCards = m_playArea.x * m_playArea.y;
         MezclaIds();
         m_MaxSize = new Vector2(m_PlayAreaTranform.rect.width, m_PlayAreaTranform.rect.height);
-        Debug.Log(m_Card.transform.localScale);
-        Debug.Log(m_MaxSize);
+        //Debug.Log(m_Card.transform.localScale);
+        //Debug.Log(m_MaxSize);
 
         //El Area de juego esta en la mitad de la pantalla, calculamos el tamaño del tablero para que se encuentre en el medio
 
         m_cardScale = CardSize();
-        m_SpaceBetweenCards = new Vector2((m_cardSize.x * m_cardScale.x)*2f, (m_cardSize.y * m_cardScale.y)*2f);
+        //*2 para que el espacio entre cartas sea de otra carta
+        m_SpaceBetweenCards = new Vector2((m_cardSize.x * m_cardScale.x) * 2f, (m_cardSize.y * m_cardScale.y) * 2f);
         Vector2 CardInitialPos = CalcCardPos();
+        for (int x = m_lastLevelCardCount; x < m_NumCards; x++)
+        {
+            GameObject CardGO = Instantiate(m_Card, new Vector3(0, 0, 0), Quaternion.identity);
+            Cards.Add(CardGO);
+            CardGO.GetComponent<CardScript>().setGameManagerJMemoria(this);
+            CardGO.transform.SetParent(m_PlayAreaTranform);
+        }
         //creamos la cartas
         for (int x = 0; x < m_playArea.x; x++)
         {
             for (int y = 0; y < m_playArea.y; y++)
             {
-                GameObject CardGO = Instantiate(m_Card, new Vector3(0, 0, 0), Quaternion.identity);
-                CardGO.GetComponent<CardScript>().changeName(CardsIds[(m_playArea.y * x) + y].ToString());
-                CardGO.GetComponent<CardScript>().setGameManagerJMemoria(this);
-                Cards.Add(CardGO);
-                CardGO.transform.localScale = new Vector3(maxSize, maxSize, 0.1f);
-
-                CardGO.transform.SetParent(m_PlayAreaTranform);
-                CardGO.transform.localPosition = new Vector3((x * (m_SpaceBetweenCards.x)) - CardInitialPos.x, (y * m_SpaceBetweenCards.y) - CardInitialPos.y, 0);
+                //Debug.Log(y + (m_playArea.y * x));
+                Cards[y + (m_playArea.y * x)].GetComponent<CardScript>().changeName(CardsIds[(m_playArea.y * x) + y].ToString());
+                //*1,5 ya que las cartas quedan muy pequeñas
+                Cards[y + (m_playArea.y * x)].transform.localScale = new Vector3(maxSize*1.5f, maxSize*1.5f, 0.1f);
+                Cards[y + (m_playArea.y * x)].transform.localPosition = new Vector3((x * (m_SpaceBetweenCards.x)) - CardInitialPos.x, (y * m_SpaceBetweenCards.y) - CardInitialPos.y, 0);
             }
         }
+        m_lastLevelCardCount = m_NumCards;
+
+
+        //mostrar las cartas al inicio y quitarlo
+        ActivateCards(false);
+        InitialTimer();
+
+
     }
 
     private void MezclaIds()
     {
-        List<int> idsCards = new List<int>();
+        //List<int> idsCards = new List<int>();
         {
-            for(int i = 0;i < m_NumCards; i++)
+            int i;
+            for (i = m_lastId; i < m_NumCards; i++)
             {
-                idsCards.Add(i/2);
+                //Debug.Log("i: "+i);
+                CardsIds.Add(i / 2);
             }
-
-            CardsIds = idsCards;
+            m_lastId = i;
             Shuffle(CardsIds);
             //CardsIds
         }
     }
 
+    private void ResetIds() {
+        m_lastId = 0;
+        for (int i = CardsIds.Count - 1;i >= 0; i--)
+        {
+            CardsIds.RemoveAt(i);
+        }
+        MezclaIds();
+    }
+
     private void RefreshCards()
     {
-        RemoveCards();
+        //RemoveCards();
         createCards();
     }
 
@@ -151,18 +201,21 @@ public class JuegoMemoria : MonoBehaviour
     //a cambiar, en vez de eliminar las cartas, mirar cuantas se necesitan crear y reutilizar las ya creadas
     private void RemoveCards()
     {
-        foreach (GameObject go in Cards)
+        m_NumCards = m_playArea.x * m_playArea.y;
+        /*foreach (GameObject go in Cards)
         {
             Destroy(go);
-        }
+        }*/
         Debug.Log(Cards.Count);
-        for (var i = (Cards.Count-1); i >= 0; i--)
+        for (var i = (m_lastLevelCardCount-1); i >= (m_NumCards); i--)
         {
+            Destroy(Cards[i]);
             Cards.RemoveAt(i);
         }
+        m_lastLevelCardCount = m_NumCards;
     }
 
-    
+
 
 
 
@@ -174,25 +227,25 @@ public class JuegoMemoria : MonoBehaviour
 
     private Vector2 CalcCardPos()
     {
-        float posicionX = (m_playArea.x - 1) * m_SpaceBetweenCards.x;
-        float posicionY = (m_playArea.y - 1) * m_SpaceBetweenCards.y;
+        float posicionX = (m_playArea.x-1) * m_SpaceBetweenCards.x;
+        float posicionY = (m_playArea.y-1) * m_SpaceBetweenCards.y;
 
-        return new Vector2(posicionX/2,posicionY/2);
+        return new Vector2(posicionX / 2, posicionY / 2);
     }
 
     private Vector2 CardSize()
     {
-        float maxSizeX = m_MaxSize.x/ (m_playArea.x* (m_cardSize.x*2f));
-        float maxSizeY = m_MaxSize.y / (m_playArea.y* (m_cardSize.y*2f));
+        float maxSizeX = m_MaxSize.x / (m_playArea.x * (m_cardSize.x * 2f));
+        float maxSizeY = m_MaxSize.y / (m_playArea.y * (m_cardSize.y * 2f));
 
         maxSize = 0;
         if (maxSizeX > maxSizeY)
             maxSize = maxSizeY;
         else
             maxSize = maxSizeX;
-        Debug.Log("maxSizeX: "+maxSizeX+", maxSizeY:"+maxSizeY);
+        //Debug.Log("maxSizeX: " + maxSizeX + ", maxSizeY:" + maxSizeY);
 
-        return new Vector2(maxSizeX,maxSizeY);
+        return new Vector2(maxSizeX, maxSizeY);
     }
 
 
@@ -205,10 +258,10 @@ public class JuegoMemoria : MonoBehaviour
     /// </summary>
     private void CountDown()
     {
-        
-        if(m_Time > 0)
+
+        if (m_Time > 0)
         {
-            m_Time -=Time.deltaTime;
+            m_Time -= Time.deltaTime;
         }
         else
         {
@@ -229,7 +282,7 @@ public class JuegoMemoria : MonoBehaviour
         float minutes = Mathf.FloorToInt(TimeDisplay / 60);
         float seconds = Mathf.FloorToInt(TimeDisplay % 60);
 
-        Timer.text = string.Format("{0:00}:{1:00}",minutes,seconds);
+        Timer.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
 
@@ -244,14 +297,14 @@ public class JuegoMemoria : MonoBehaviour
     public void facedUp(CardScript GO)
     {
         FacedUpCards.Add(GO);
-        Debug.Log(GO);
-        if(FacedUpCards.Count%2== 0)
+        //Debug.Log(GO);
+        if (FacedUpCards.Count % 2 == 0)
         {
-            if (String.Compare(FacedUpCards[0].getName(), FacedUpCards[1].getName())==0)
+            if (String.Compare(FacedUpCards[0].getName(), FacedUpCards[1].getName()) == 0)
             {
                 Debug.Log("par");
                 m_NumeroPares++;
-                
+
             }
             else
             {
@@ -285,17 +338,56 @@ public class JuegoMemoria : MonoBehaviour
 
     private void NextLevel()
     {
-        if(m_Level%2==0)
-            m_playArea.x+= 2;
+        if (m_Level % 2 == 0)
+            m_playArea.x += 2;
         else
             m_playArea.y++;
         RefreshCards();
         m_Time = 60;
         m_Level++;
-        Level.text = "Level "+m_Level;
-        
+        Level.text = "Level " + m_Level;
+
     }
 
+    public void startGame()
+    {
+        m_IsPlaying = true;
+    }
+    
+    public void stopGame()
+    {
+        m_IsPlaying = false;
+    }
+
+    public void restart()
+    {
+        m_playArea.x = 2;
+        m_playArea.y = 2;
+        RemoveCards();
+        ResetIds();
+        createCards();
+        m_Time = 60;
+        m_Level=0;
+        Level.text = "Level " + m_Level;
+    }
+
+
+
+    public void ActivateCards(bool activate)
+    {
+        foreach(GameObject Card in Cards)
+        {
+            Card.GetComponent<CardScript>().ActivateReverse(activate);
+        }
+    }
+
+    public void InitialTimer()
+    {
+
+
+
+        ActivateCards(true);
+    }
 
 
 
