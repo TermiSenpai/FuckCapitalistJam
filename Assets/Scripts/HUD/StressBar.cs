@@ -12,6 +12,7 @@ public class StressBar : MonoBehaviour
     [Tooltip("Valor más bajo, más velocidad"), Range(0f, 0.1f)]
     public float speedValue;
     Coroutine barAnim;
+    [SerializeField] private AttackAnim attackAnim;
 
     private void Start()
     {
@@ -81,12 +82,14 @@ public class StressBar : MonoBehaviour
             speedValue = 0.1f;
             PlayerStress.Stress = 0;
             PlayerStress.canModify = false;
+            attackAnim.enabled = true;
         }
 
         else if(stressSlider.value <= 0)
         {
             speedValue = 0.02f;
             PlayerStress.canModify = true;
+            attackAnim.enabled = false; 
         }
     }
 }
