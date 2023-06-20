@@ -36,8 +36,8 @@ public class StressBar : MonoBehaviour
 
     private void onStressChanged(object sender, EventArgs e)
     {
-        if(barAnim != null)
-            StopCoroutine(barAnim);       
+        if (barAnim != null)
+            StopCoroutine(barAnim);
 
         checkStress();
 
@@ -75,7 +75,7 @@ public class StressBar : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
     }
-    IEnumerator decreaseStressBarAnim(float newValue,  float speed)
+    IEnumerator decreaseStressBarAnim(float newValue, float speed)
     {
         while (stressSlider.value > newValue)
         {
@@ -86,12 +86,13 @@ public class StressBar : MonoBehaviour
 
     public void checkStress()
     {
-        if(PlayerStress.Stress >= 100)
+        if (PlayerStress.Stress >= 100)
         {
-           stressSlider.maxValue = PlayerStress.Stress;
+            stressSlider.maxValue = PlayerStress.Stress;
+            stressSlider.value = PlayerStress.Stress;
         }
 
-        else if(PlayerStress.Stress <= 0 && stressSlider.value <= 0)
+        else if (PlayerStress.Stress <= 0 && stressSlider.value <= 0)
         {
             stopFuriaMode();
         }
