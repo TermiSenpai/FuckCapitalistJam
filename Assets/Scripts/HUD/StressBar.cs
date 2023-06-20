@@ -47,13 +47,12 @@ public class StressBar : MonoBehaviour
 
     public void increaseStress()
     {
-
         barAnim = StartCoroutine(increaseStressBarAnim(PlayerStress.Stress));
     }
 
     public void decreaseStress()
     {
-        barAnim = StartCoroutine(decreaseStressBarAnim(PlayerStress.Stress));
+        barAnim = StartCoroutine(decreaseStressBarAnim(PlayerStress.Stress, speedValue));
     }
 
     IEnumerator increaseStressBarAnim(float newValue)
@@ -70,8 +69,16 @@ public class StressBar : MonoBehaviour
     {
         while (stressSlider.value > newValue)
         {
+            stressSlider.value -= Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+    }
+    IEnumerator decreaseStressBarAnim(float newValue,  float speed)
+    {
+        while (stressSlider.value > newValue)
+        {
             stressSlider.value -= 0.5f;
-            yield return new WaitForSeconds(speedValue);
+            yield return new WaitForSeconds(speed);
         }
     }
 
@@ -79,17 +86,29 @@ public class StressBar : MonoBehaviour
     {
         if(stressSlider.value >= 100)
         {
-            speedValue = 0.1f;
-            PlayerStress.Stress = 0;
-            PlayerStress.canModify = false;
-            attackAnim.enabled = true;
+           stressSlider.maxValue = PlayerStress.Stress;
         }
 
         else if(stressSlider.value <= 0)
         {
-            speedValue = 0.02f;
-            PlayerStress.canModify = true;
-            attackAnim.enabled = false; 
+            stopFuriaMode();
         }
+    }
+
+    public void startFuriaMode()
+    {
+        speedValue = 0.1f;
+        barAnim = StartCoroutine(decreaseStressBarAnim(0));
+        PlayerStress.canModify = false;
+        attackAnim.enabled = true;
+    }
+
+    private void stopFuriaMode()
+    {
+        PlayerStress.Stress = 0;
+        speedValue = 0.02f;
+        PlayerStress.canModify = true;
+        attackAnim.enabled = false;
+        stressSlider.maxValue = 100;
     }
 }
