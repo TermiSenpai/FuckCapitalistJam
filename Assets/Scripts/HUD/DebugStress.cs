@@ -15,6 +15,7 @@ public class DebugStress : Editor
         if (GUILayout.Button("Increase"))
         {
             PlayerStress.Stress += stressBar.debugValue;
+            stressBar.debug = PlayerStress.Stress;
         }
         if (GUILayout.Button("Decrease"))
         {

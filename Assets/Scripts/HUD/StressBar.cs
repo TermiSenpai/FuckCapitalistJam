@@ -9,7 +9,7 @@ public class StressBar : MonoBehaviour
     [SerializeField] Slider stressSlider;
 
     public float debugValue;
-    [Tooltip("Valor más bajo, más velocidad"), Range(0f, 0.1f)]
+    [Tooltip("Valor mï¿½s bajo, mï¿½s velocidad"), Range(0f, 0.1f)]
     public float speedValue;
     Coroutine barAnim;
     [SerializeField] private AttackAnim attackAnim;
@@ -38,6 +38,8 @@ public class StressBar : MonoBehaviour
     {
         if(barAnim != null)
             StopCoroutine(barAnim);       
+
+        checkStress();
 
         if (PlayerStress.Stress < stressSlider.value)
             decreaseStress();
@@ -84,12 +86,12 @@ public class StressBar : MonoBehaviour
 
     public void checkStress()
     {
-        if(stressSlider.value >= 100)
+        if(PlayerStress.Stress >= 100)
         {
            stressSlider.maxValue = PlayerStress.Stress;
         }
 
-        else if(stressSlider.value <= 0)
+        else if(PlayerStress.Stress <= 0 && stressSlider.value <= 0)
         {
             stopFuriaMode();
         }
