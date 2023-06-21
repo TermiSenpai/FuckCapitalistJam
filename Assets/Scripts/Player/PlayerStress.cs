@@ -6,6 +6,7 @@ public static class PlayerStress
     public static event EventHandler ValueChanged;
 
     public static bool canModify = true;
+    public static bool isFuriaMode = false;
 
     public static float Stress
     {
@@ -15,7 +16,8 @@ public static class PlayerStress
             if (stress != value && canModify)
             {
                 stress = value;
-                OnValueChanged(); // Llamamos al evento cuando el valor cambia
+                if (!isFuriaMode)
+                    OnValueChanged(); // Llamamos al evento cuando el valor cambia
             }
         }
     }

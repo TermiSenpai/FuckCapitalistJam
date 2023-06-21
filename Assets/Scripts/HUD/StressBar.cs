@@ -39,12 +39,13 @@ public class StressBar : MonoBehaviour
         if (barAnim != null)
             StopCoroutine(barAnim);
 
-        checkStress();
 
         if (PlayerStress.Stress < stressSlider.value)
             decreaseStress();
         else if (PlayerStress.Stress > stressSlider.value)
             increaseStress();
+
+        checkStress();
     }
 
     public void increaseStress()
@@ -101,14 +102,16 @@ public class StressBar : MonoBehaviour
     public void startFuriaMode()
     {
         speedValue = 0.1f;
-        barAnim = StartCoroutine(decreaseStressBarAnim(0));
+        PlayerStress.isFuriaMode = true;
+        PlayerStress.Stress = 0;
+        barAnim = StartCoroutine(decreaseStressBarAnim(PlayerStress.Stress));
         PlayerStress.canModify = false;
         attackAnim.enabled = true;
     }
 
     private void stopFuriaMode()
     {
-        PlayerStress.Stress = 0;
+        PlayerStress.isFuriaMode = false;
         speedValue = 0.02f;
         PlayerStress.canModify = true;
         attackAnim.enabled = false;
